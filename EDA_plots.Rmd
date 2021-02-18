@@ -35,7 +35,7 @@ gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
 ```{r}
 # correlation plots
 ss_modified <- ss %>%
-  select(age, percnumb, perclet, percbody, peabody)
+  select(percnumb, perclet, percbody, age, peabody)
 ss_modified <- cor(ss_modified)
 corrplot(ss_modified, method = "number")
 ```
