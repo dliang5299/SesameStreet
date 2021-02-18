@@ -18,13 +18,15 @@ theme_set(theme_bw())
 
 ```{r}
 # viewcat
-ylim(-1, 12)
 v1 <- ggplot(ss, aes(viewcat, percnumb)) +
-  geom_boxplot()
+  geom_boxplot() +
+  ylim(-1, 12)
 v2 <- ggplot(ss, aes(viewcat, perclet)) +
-  geom_boxplot()
+  geom_boxplot() +
+  ylim(-1, 12)
 v3 <- ggplot(ss, aes(viewcat, percbody)) +
-  geom_boxplot()
+  geom_boxplot() +
+  ylim(-1, 12)
 
 gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
 ```
