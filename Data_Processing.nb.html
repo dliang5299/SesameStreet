@@ -1773,14 +1773,17 @@ ss_raw &lt;- fread(&quot;Data/SesameStreetData.csv&quot;)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgcmVzcG9uc2UgdmFyaWFibGVzXG5zcyA8LVxuICBzc19yYXcgJT4lXG4gIG11dGF0ZShwZXJjbnVtYiA9IChwb3N0bnVtYiAtIHByZW51bWIpL3ByZW51bWIsXG4gICAgICAgICBwZXJjbGV0ID0gKHBvc3RsZXQgLSBwcmVsZXQpL3ByZWxldCxcbiAgICAgICAgIHBlcmNib2R5ID0gKHBvc3Rib2R5IC0gcHJlYm9keSkvcHJlYm9keSkgJT4lXG4gIHNlbGVjdChpZCwgc2l0ZSwgc2V4LCBhZ2UsIHZpZXdjYXQsIHNldHRpbmcsIHBlcmNudW1iLCBwZXJjbGV0LCBwZXJjYm9keSwgcGVhYm9keSwgZW5jb3VyLCByZWd1bGFyKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgcmVzcG9uc2UgdmFyaWFibGVzXG5zcyA8LVxuICBzc19yYXcgJT4lXG4gIG11dGF0ZShwZXJjbnVtYiA9IChwb3N0bnVtYiAtIHByZW51bWIpKjEwMC9wcmVudW1iLFxuICAgICAgICAgcGVyY2xldCA9IChwb3N0bGV0IC0gcHJlbGV0KSoxMDAvcHJlbGV0LFxuICAgICAgICAgcGVyY2JvZHkgPSAocG9zdGJvZHkgLSBwcmVib2R5KSoxMDAvcHJlYm9keSkgJT4lXG4gIHNlbGVjdChpZCwgc2l0ZSwgc2V4LCBhZ2UsIHZpZXdjYXQsIHNldHRpbmcsIHBlYWJvZHksIGVuY291ciwgcmVndWxhcixcbiAgICAgICAgIHByZW51bWIsIHBvc3RudW1iLCBwZXJjbnVtYiwgXG4gICAgICAgICBwcmVsZXQsIHBvc3RsZXQsIHBlcmNsZXQsIFxuICAgICAgICAgcHJlYm9keSwgcG9zdGJvZHksIHBlcmNib2R5KVxuYGBgIn0= -->
 <pre class="r"><code># create response variables
 ss &lt;-
   ss_raw %&gt;%
-  mutate(percnumb = (postnumb - prenumb)/prenumb,
-         perclet = (postlet - prelet)/prelet,
-         percbody = (postbody - prebody)/prebody) %&gt;%
-  select(id, site, sex, age, viewcat, setting, percnumb, perclet, percbody, peabody, encour, regular)</code></pre>
+  mutate(percnumb = (postnumb - prenumb)*100/prenumb,
+         perclet = (postlet - prelet)*100/prelet,
+         percbody = (postbody - prebody)*100/prebody) %&gt;%
+  select(id, site, sex, age, viewcat, setting, peabody, encour, regular,
+         prenumb, postnumb, percnumb, 
+         prelet, postlet, perclet, 
+         prebody, postbody, percbody)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1791,7 +1794,7 @@ ss &lt;-
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRhdGEgUHJvY2Vzc2luZyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmBgYHtyfQ0KIyBsaWJyYXJpZXMNCmxpYnJhcnkoZGF0YS50YWJsZSkNCmxpYnJhcnkodGlkeXZlcnNlKQ0KDQojIGxvYWQgZGF0YQ0Kc3NfcmF3IDwtIGZyZWFkKCJEYXRhL1Nlc2FtZVN0cmVldERhdGEuY3N2IikNCmBgYA0KDQpgYGB7cn0NCiMgY3JlYXRlIHJlc3BvbnNlIHZhcmlhYmxlcw0Kc3MgPC0NCiAgc3NfcmF3ICU+JQ0KICBtdXRhdGUocGVyY251bWIgPSAocG9zdG51bWIgLSBwcmVudW1iKS9wcmVudW1iLA0KICAgICAgICAgcGVyY2xldCA9IChwb3N0bGV0IC0gcHJlbGV0KS9wcmVsZXQsDQogICAgICAgICBwZXJjYm9keSA9IChwb3N0Ym9keSAtIHByZWJvZHkpL3ByZWJvZHkpICU+JQ0KICBzZWxlY3QoaWQsIHNpdGUsIHNleCwgYWdlLCB2aWV3Y2F0LCBzZXR0aW5nLCBwZXJjbnVtYiwgcGVyY2xldCwgcGVyY2JvZHksIHBlYWJvZHksIGVuY291ciwgcmVndWxhcikNCmBgYA0KDQpgYGB7cn0NCnNhdmVSRFMoc3MsIGZpbGUgPSAiRGF0YS9zcy5SRFMiKQ0KYGBg</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRhdGEgUHJvY2Vzc2luZyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmBgYHtyfQ0KIyBsaWJyYXJpZXMNCmxpYnJhcnkoZGF0YS50YWJsZSkNCmxpYnJhcnkodGlkeXZlcnNlKQ0KDQojIGxvYWQgZGF0YQ0Kc3NfcmF3IDwtIGZyZWFkKCJEYXRhL1Nlc2FtZVN0cmVldERhdGEuY3N2IikNCmBgYA0KDQpgYGB7cn0NCiMgY3JlYXRlIHJlc3BvbnNlIHZhcmlhYmxlcw0Kc3MgPC0NCiAgc3NfcmF3ICU+JQ0KICBtdXRhdGUocGVyY251bWIgPSAocG9zdG51bWIgLSBwcmVudW1iKSoxMDAvcHJlbnVtYiwNCiAgICAgICAgIHBlcmNsZXQgPSAocG9zdGxldCAtIHByZWxldCkqMTAwL3ByZWxldCwNCiAgICAgICAgIHBlcmNib2R5ID0gKHBvc3Rib2R5IC0gcHJlYm9keSkqMTAwL3ByZWJvZHkpICU+JQ0KICBzZWxlY3QoaWQsIHNpdGUsIHNleCwgYWdlLCB2aWV3Y2F0LCBzZXR0aW5nLCBwZWFib2R5LCBlbmNvdXIsIHJlZ3VsYXIsDQogICAgICAgICBwcmVudW1iLCBwb3N0bnVtYiwgcGVyY251bWIsIA0KICAgICAgICAgcHJlbGV0LCBwb3N0bGV0LCBwZXJjbGV0LCANCiAgICAgICAgIHByZWJvZHksIHBvc3Rib2R5LCBwZXJjYm9keSkNCmBgYA0KDQpgYGB7cn0NCnNhdmVSRFMoc3MsIGZpbGUgPSAiRGF0YS9zcy5SRFMiKQ0KYGBg</div>
 
 
 

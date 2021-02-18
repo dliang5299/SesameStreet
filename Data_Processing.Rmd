@@ -16,10 +16,13 @@ ss_raw <- fread("Data/SesameStreetData.csv")
 # create response variables
 ss <-
   ss_raw %>%
-  mutate(percnumb = (postnumb - prenumb)/prenumb,
-         perclet = (postlet - prelet)/prelet,
-         percbody = (postbody - prebody)/prebody) %>%
-  select(id, site, sex, age, viewcat, setting, percnumb, perclet, percbody, peabody, encour, regular)
+  mutate(percnumb = (postnumb - prenumb)*100/prenumb,
+         perclet = (postlet - prelet)*100/prelet,
+         percbody = (postbody - prebody)*100/prebody) %>%
+  select(id, site, sex, age, viewcat, setting, peabody, encour, regular,
+         prenumb, postnumb, percnumb, 
+         prelet, postlet, perclet, 
+         prebody, postbody, percbody)
 ```
 
 ```{r}

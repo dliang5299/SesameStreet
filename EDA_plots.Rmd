@@ -7,6 +7,7 @@ output: html_notebook
 # libraries
 library(tidyverse)
 library(gridExtra)
+library(corrplot)
 
 # load data
 ss <- readRDS("Data/ss.RDS") %>%
@@ -17,24 +18,22 @@ theme_set(theme_bw())
 ```
 
 ```{r}
-# viewcat
+# viewcat boxplots
 v1 <- ggplot(ss, aes(viewcat, percnumb)) +
   geom_boxplot() +
-  ylim(-1, 12)
+  ylim(-100, 1200)
 v2 <- ggplot(ss, aes(viewcat, perclet)) +
   geom_boxplot() +
-  ylim(-1, 12)
+  ylim(-100, 1200)
 v3 <- ggplot(ss, aes(viewcat, percbody)) +
   geom_boxplot() +
-  ylim(-1, 12)
+  ylim(-100, 1200)
 
 gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
 ```
 
 ```{r}
 # correlation plots
-
-library(corrplot)
 ss_modified <- ss %>%
   select(age, percnumb, perclet, percbody, peabody)
 ss_modified <- cor(ss_modified)
