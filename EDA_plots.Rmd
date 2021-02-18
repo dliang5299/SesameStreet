@@ -28,3 +28,13 @@ v3 <- ggplot(ss, aes(viewcat, percbody)) +
 
 gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
 ```
+
+```{r}
+# correlation plots
+
+library(corrplot)
+ss_modified <- ss %>%
+  select(age, percnumb, perclet, percbody, peabody)
+ss_modified <- cor(ss_modified)
+corrplot(ss_modified, method = "number")
+```
