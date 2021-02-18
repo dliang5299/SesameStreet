@@ -39,3 +39,26 @@ ss_modified <- ss %>%
 ss_modified <- cor(ss_modified)
 corrplot(ss_modified, method = "number")
 ```
+
+---
+
+# Percent Change Boxplots
+
+```{r}
+
+# Convert the data from wide to long so we can put it one plot
+ss %>%
+  select(id, percnumb, perclet, percbody) %>%
+  pivot_longer(-id) %>%
+  filter(value < 1000) %>%
+  ggplot(aes(x = name, y = value)) +
+  geom_boxplot() +
+  labs(y = "Percent Change", x = "",
+       title = "Child Percent Change in Pre-Post Scores", 
+       subtitle = "Outlier for percnumb (1200%) removed for clarity")
+```
+
+
+
+
+
