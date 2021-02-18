@@ -11,9 +11,20 @@ library(gridExtra)
 # load data
 ss <- readRDS("Data/ss.RDS") %>%
   mutate(viewcat = as.factor(viewcat))
+
+# ggpplot options
+theme_set(theme_bw())
 ```
 
 ```{r}
 # viewcat
-v1 <- ggplot(ss, aes(v))
+ylim(-1, 12)
+v1 <- ggplot(ss, aes(viewcat, percnumb)) +
+  geom_boxplot()
+v2 <- ggplot(ss, aes(viewcat, perclet)) +
+  geom_boxplot()
+v3 <- ggplot(ss, aes(viewcat, percbody)) +
+  geom_boxplot()
+
+gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
 ```

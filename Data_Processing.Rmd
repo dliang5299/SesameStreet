@@ -19,7 +19,7 @@ ss <-
   mutate(percnumb = (postnumb - prenumb)/prenumb,
          perclet = (postlet - prelet)/prelet,
          percbody = (postbody - prebody)/prebody) %>%
-  select(id, site, sex, age, viewcat, setting, percnumb, perclet, percbody, encour, regular)
+  select(id, site, sex, age, viewcat, setting, percnumb, perclet, percbody, peabody, encour, regular)
 ```
 
 ```{r}
