@@ -3,4 +3,17 @@ title: "Exploratory Data Analysis"
 output: html_notebook
 ---
 
+```{r}
+# libraries
+library(tidyverse)
+library(gridExtra)
 
+# load data
+ss <- readRDS("Data/ss.RDS") %>%
+  mutate(viewcat = as.factor(viewcat))
+```
+
+```{r}
+# viewcat
+v1 <- ggplot(ss, aes(v))
+```
