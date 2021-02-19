@@ -18,18 +18,30 @@ theme_set(theme_bw())
 ```
 
 ```{r}
-# viewcat boxplots
-v1 <- ggplot(ss, aes(viewcat, percnumb)) +
-  geom_boxplot() +
-  ylim(-100, 1200)
-v2 <- ggplot(ss, aes(viewcat, perclet)) +
-  geom_boxplot() +
-  ylim(-100, 1200)
-v3 <- ggplot(ss, aes(viewcat, percbody)) +
-  geom_boxplot() +
-  ylim(-100, 1200)
+ss1 <-
+  ss %>%
+  filter(percnumb < 1000)
 
+# viewcat boxplots
+v1 <- ggplot(ss1, aes(viewcat, percnumb)) +
+  geom_boxplot() +
+  ylim(-100, 600) +
+  xlab("Viewing Category") +
+  ylab("Percent Change in Number Score")
+v2 <- ggplot(ss1, aes(viewcat, perclet)) +
+  geom_boxplot() +
+  ylim(-100, 600)+
+  xlab("Viewing Category") +
+  ylab("Percent Change in Letter Score")
+v3 <- ggplot(ss1, aes(viewcat, percbody)) +
+  geom_boxplot() +
+  ylim(-100, 600)+
+  xlab("Viewing Category") +
+  ylab("Percent Change in Body Score")
+
+png("viewcat_boxplot.png", width = 1280, height = 720)
 gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
+dev.off()
 ```
 
 ```{r}
