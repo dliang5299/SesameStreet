@@ -20,7 +20,7 @@ theme_set(theme_bw())
 ```{r}
 ss1 <-
   ss %>%
-  filter(percnumb < 1000)
+  na.omit #filter(percnumb < 1000)
 
 # viewcat boxplots
 v1 <- ggplot(ss1, aes(viewcat, percnumb)) +
