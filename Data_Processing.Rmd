@@ -22,7 +22,10 @@ ss <-
   select(id, site, sex, age, viewcat, setting, peabody, encour, regular,
          prenumb, postnumb, percnumb, 
          prelet, postlet, perclet, 
-         prebody, postbody, percbody)
+         prebody, postbody, percbody) %>%
+  mutate(percnumb = replace(percnumb, percnumb==1200, NA)) # Set 1200 score to NA
+
+
 ```
 
 ```{r}
