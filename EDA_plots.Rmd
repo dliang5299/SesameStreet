@@ -48,7 +48,7 @@ dev.off()
 # correlation plots
 ss_modified <- ss %>%
   select(percnumb, perclet, percbody, age, peabody)
-ss_modified <- cor(ss_modified)
+ss_modified <- cor(ss_modified, use="pairwise.complete.obs")
 corrplot(ss_modified, method = "number")
 ```
 
