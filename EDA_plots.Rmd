@@ -71,6 +71,25 @@ ss %>%
 ```
 
 ```{r}
+ss_dep <- ss %>%
+  select(age, peabody, site)
+
+groupnames <- colnames(ss_all_dep)
+
+for (i in groupnames) {
+    plot(ss_dep[[i]],ss$percnumb,ylab="percnum",xlab=i,main=paste("Scatterplot of percnum and",i, sep=" "))
+}
+
+for (i in groupnames) {
+    plot(ss_dep[[i]],ss$perclet,ylab="perclet",xlab=i,main=paste("Scatterplot of perclet and",i, sep=" "))
+}
+
+for (i in groupnames) {
+    plot(ss_dep[[i]],ss$perclet,ylab="percbody",xlab=i,main=paste("Scatterplot of percbody and",i, sep=" "))
+}
+```
+
+```{r}
 # EDA for (pre-post)/max values
 
 # libraries
@@ -131,4 +150,23 @@ ss_all %>%
   geom_boxplot() +
   labs(y = "Percent Change", x = "",
        title = "Child Percent Change in Pre-Post Scores")
+```
+
+```{r}
+ss_all_dep <- ss_all %>%
+  select(age, peabody, site)
+
+groupnames <- colnames(ss_all_dep)
+
+for (i in groupnames) {
+    plot(ss_all_dep[[i]],ss_all$percnumb_max,ylab="percnum_max",xlab=i,main=paste("Scatterplot of percnum_max and",i, sep=" "))
+}
+
+for (i in groupnames) {
+    plot(ss_all_dep[[i]],ss_all$perclet_max,ylab="perclet_max",xlab=i,main=paste("Scatterplot of perclet_max and",i, sep=" "))
+}
+
+for (i in groupnames) {
+    plot(ss_all_dep[[i]],ss_all$perclet_max,ylab="percbody_max",xlab=i,main=paste("Scatterplot of percbody_max and",i, sep=" "))
+}
 ```
