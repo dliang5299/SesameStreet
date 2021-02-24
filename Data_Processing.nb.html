@@ -300,8 +300,36 @@ ss &lt;-
 <pre class="r"><code>saveRDS(ss, file = &quot;Data/ss.RDS&quot;)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDcmVhdGUgcmVzcG9uc2UgdmFyaWFibGVzLCBpbmNsdWRpbmcgdGhlIGRpdmlkZWQgYnkgbWF4XG4jIEtlZXAgdGhlIG91dGxpZXIgZm9yIHB1cmUgcGVyY2VudCBpbmNyZWFzZVxuc3NfYWxsIDwtXG4gIHNzX3JhdyAlPiVcbiAgbXV0YXRlKHBlcmNudW1iID0gKHBvc3RudW1iIC0gcHJlbnVtYikqMTAwL3ByZW51bWIsXG4gICAgICAgICBwZXJjbGV0ID0gKHBvc3RsZXQgLSBwcmVsZXQpKjEwMC9wcmVsZXQsXG4gICAgICAgICBwZXJjYm9keSA9IChwb3N0Ym9keSAtIHByZWJvZHkpKjEwMC9wcmVib2R5KSAlPiVcbiAgbXV0YXRlKHBlcmNudW1iX21heCA9IChwb3N0bnVtYiAtIHByZW51bWIpKjEwMC81NCxcbiAgICAgICAgIHBlcmNsZXRfbWF4ID0gKHBvc3RsZXQgLSBwcmVsZXQpKjEwMC81OCxcbiAgICAgICAgIHBlcmNib2R5X21heCA9IChwb3N0Ym9keSAtIHByZWJvZHkpKjEwMC8zMikgJT4lXG4gIHNlbGVjdChpZCwgc2l0ZSwgc2V4LCBhZ2UsIHZpZXdjYXQsIHNldHRpbmcsIFxuICAgICAgICAgcGVhYm9keSwgZW5jb3VyLCByZWd1bGFyLFxuICAgICAgICAgcHJlbnVtYiwgcG9zdG51bWIsIHBlcmNudW1iLCBwZXJjbnVtYl9tYXgsXG4gICAgICAgICBwcmVsZXQsIHBvc3RsZXQsIHBlcmNsZXQsIHBlcmNsZXRfbWF4LFxuICAgICAgICAgcHJlYm9keSwgcG9zdGJvZHksIHBlcmNib2R5LCBwZXJjYm9keV9tYXgpIFxuYGBgIn0= -->
+<pre class="r"><code># Create response variables, including the divided by max
+# Keep the outlier for pure percent increase
+ss_all &lt;-
+  ss_raw %&gt;%
+  mutate(percnumb = (postnumb - prenumb)*100/prenumb,
+         perclet = (postlet - prelet)*100/prelet,
+         percbody = (postbody - prebody)*100/prebody) %&gt;%
+  mutate(percnumb_max = (postnumb - prenumb)*100/54,
+         perclet_max = (postlet - prelet)*100/58,
+         percbody_max = (postbody - prebody)*100/32) %&gt;%
+  select(id, site, sex, age, viewcat, setting, 
+         peabody, encour, regular,
+         prenumb, postnumb, percnumb, percnumb_max,
+         prelet, postlet, perclet, perclet_max,
+         prebody, postbody, percbody, percbody_max) </code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2F2ZVJEUyhzc19hbGwsIGZpbGUgPSBcIkRhdGEvc3NfYWxsLlJEU1wiKVxuYGBgIn0= -->
+<pre class="r"><code>saveRDS(ss_all, file = &quot;Data/ss_all.RDS&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRhdGEgUHJvY2Vzc2luZyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmBgYHtyfQ0KIyBsaWJyYXJpZXMNCmxpYnJhcnkoZGF0YS50YWJsZSkNCmxpYnJhcnkodGlkeXZlcnNlKQ0KDQojIGxvYWQgZGF0YQ0Kc3NfcmF3IDwtIGZyZWFkKCJEYXRhL1Nlc2FtZVN0cmVldERhdGEuY3N2IikNCmBgYA0KDQpgYGB7cn0NCiMgY3JlYXRlIHJlc3BvbnNlIHZhcmlhYmxlcw0Kc3MgPC0NCiAgc3NfcmF3ICU+JQ0KICBtdXRhdGUocGVyY251bWIgPSAocG9zdG51bWIgLSBwcmVudW1iKSoxMDAvcHJlbnVtYiwNCiAgICAgICAgIHBlcmNsZXQgPSAocG9zdGxldCAtIHByZWxldCkqMTAwL3ByZWxldCwNCiAgICAgICAgIHBlcmNib2R5ID0gKHBvc3Rib2R5IC0gcHJlYm9keSkqMTAwL3ByZWJvZHkpICU+JQ0KICBzZWxlY3QoaWQsIHNpdGUsIHNleCwgYWdlLCB2aWV3Y2F0LCBzZXR0aW5nLCBwZWFib2R5LCBlbmNvdXIsIHJlZ3VsYXIsDQogICAgICAgICBwcmVudW1iLCBwb3N0bnVtYiwgcGVyY251bWIsIA0KICAgICAgICAgcHJlbGV0LCBwb3N0bGV0LCBwZXJjbGV0LCANCiAgICAgICAgIHByZWJvZHksIHBvc3Rib2R5LCBwZXJjYm9keSkgJT4lDQogIG11dGF0ZShwZXJjbnVtYiA9IHJlcGxhY2UocGVyY251bWIsIHBlcmNudW1iPT0xMjAwLCBOQSkpICMgU2V0IDEyMDAgc2NvcmUgdG8gTkENCg0KDQpgYGANCg0KYGBge3J9DQpzYXZlUkRTKHNzLCBmaWxlID0gIkRhdGEvc3MuUkRTIikNCmBgYA==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRhdGEgUHJvY2Vzc2luZyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCmBgYHtyfQ0KIyBsaWJyYXJpZXMNCmxpYnJhcnkoZGF0YS50YWJsZSkNCmxpYnJhcnkodGlkeXZlcnNlKQ0KDQojIGxvYWQgZGF0YQ0Kc3NfcmF3IDwtIGZyZWFkKCJEYXRhL1Nlc2FtZVN0cmVldERhdGEuY3N2IikNCmBgYA0KDQpgYGB7cn0NCiMgY3JlYXRlIHJlc3BvbnNlIHZhcmlhYmxlcw0Kc3MgPC0NCiAgc3NfcmF3ICU+JQ0KICBtdXRhdGUocGVyY251bWIgPSAocG9zdG51bWIgLSBwcmVudW1iKSoxMDAvcHJlbnVtYiwNCiAgICAgICAgIHBlcmNsZXQgPSAocG9zdGxldCAtIHByZWxldCkqMTAwL3ByZWxldCwNCiAgICAgICAgIHBlcmNib2R5ID0gKHBvc3Rib2R5IC0gcHJlYm9keSkqMTAwL3ByZWJvZHkpICU+JQ0KICBzZWxlY3QoaWQsIHNpdGUsIHNleCwgYWdlLCB2aWV3Y2F0LCBzZXR0aW5nLCBwZWFib2R5LCBlbmNvdXIsIHJlZ3VsYXIsDQogICAgICAgICBwcmVudW1iLCBwb3N0bnVtYiwgcGVyY251bWIsIA0KICAgICAgICAgcHJlbGV0LCBwb3N0bGV0LCBwZXJjbGV0LCANCiAgICAgICAgIHByZWJvZHksIHBvc3Rib2R5LCBwZXJjYm9keSkgJT4lDQogIG11dGF0ZShwZXJjbnVtYiA9IHJlcGxhY2UocGVyY251bWIsIHBlcmNudW1iPT0xMjAwLCBOQSkpICMgU2V0IDEyMDAgc2NvcmUgdG8gTkENCg0KDQpgYGANCg0KYGBge3J9DQpzYXZlUkRTKHNzLCBmaWxlID0gIkRhdGEvc3MuUkRTIikNCmBgYA0KDQpgYGB7cn0NCiMgQ3JlYXRlIHJlc3BvbnNlIHZhcmlhYmxlcywgaW5jbHVkaW5nIHRoZSBkaXZpZGVkIGJ5IG1heA0KIyBLZWVwIHRoZSBvdXRsaWVyIGZvciBwdXJlIHBlcmNlbnQgaW5jcmVhc2UNCnNzX2FsbCA8LQ0KICBzc19yYXcgJT4lDQogIG11dGF0ZShwZXJjbnVtYiA9IChwb3N0bnVtYiAtIHByZW51bWIpKjEwMC9wcmVudW1iLA0KICAgICAgICAgcGVyY2xldCA9IChwb3N0bGV0IC0gcHJlbGV0KSoxMDAvcHJlbGV0LA0KICAgICAgICAgcGVyY2JvZHkgPSAocG9zdGJvZHkgLSBwcmVib2R5KSoxMDAvcHJlYm9keSkgJT4lDQogIG11dGF0ZShwZXJjbnVtYl9tYXggPSAocG9zdG51bWIgLSBwcmVudW1iKSoxMDAvNTQsDQogICAgICAgICBwZXJjbGV0X21heCA9IChwb3N0bGV0IC0gcHJlbGV0KSoxMDAvNTgsDQogICAgICAgICBwZXJjYm9keV9tYXggPSAocG9zdGJvZHkgLSBwcmVib2R5KSoxMDAvMzIpICU+JQ0KICBzZWxlY3QoaWQsIHNpdGUsIHNleCwgYWdlLCB2aWV3Y2F0LCBzZXR0aW5nLCANCiAgICAgICAgIHBlYWJvZHksIGVuY291ciwgcmVndWxhciwNCiAgICAgICAgIHByZW51bWIsIHBvc3RudW1iLCBwZXJjbnVtYiwgcGVyY251bWJfbWF4LA0KICAgICAgICAgcHJlbGV0LCBwb3N0bGV0LCBwZXJjbGV0LCBwZXJjbGV0X21heCwNCiAgICAgICAgIHByZWJvZHksIHBvc3Rib2R5LCBwZXJjYm9keSwgcGVyY2JvZHlfbWF4KSANCmBgYA0KDQpgYGB7cn0NCnNhdmVSRFMoc3NfYWxsLCBmaWxlID0gIkRhdGEvc3NfYWxsLlJEUyIpDQpgYGANCg==</div>
 
 
 

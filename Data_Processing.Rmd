@@ -31,3 +31,25 @@ ss <-
 ```{r}
 saveRDS(ss, file = "Data/ss.RDS")
 ```
+
+```{r}
+# Create response variables, including the divided by max
+# Keep the outlier for pure percent increase
+ss_all <-
+  ss_raw %>%
+  mutate(percnumb = (postnumb - prenumb)*100/prenumb,
+         perclet = (postlet - prelet)*100/prelet,
+         percbody = (postbody - prebody)*100/prebody) %>%
+  mutate(percnumb_max = (postnumb - prenumb)*100/54,
+         perclet_max = (postlet - prelet)*100/58,
+         percbody_max = (postbody - prebody)*100/32) %>%
+  select(id, site, sex, age, viewcat, setting, 
+         peabody, encour, regular,
+         prenumb, postnumb, percnumb, percnumb_max,
+         prelet, postlet, perclet, perclet_max,
+         prebody, postbody, percbody, percbody_max) 
+```
+
+```{r}
+saveRDS(ss_all, file = "Data/ss_all.RDS")
+```
