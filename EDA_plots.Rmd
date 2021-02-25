@@ -70,7 +70,103 @@ ss %>%
        subtitle = "Outlier for percnumb (1200%) removed for clarity")
 ```
 
+```{r}
+ss_dep <- ss %>%
+  select(age, peabody, site)
 
+groupnames <- colnames(ss_all_dep)
 
+for (i in groupnames) {
+    plot(ss_dep[[i]],ss$percnumb,ylab="percnum",xlab=i,main=paste("Scatterplot of percnum and",i, sep=" "))
+}
 
+for (i in groupnames) {
+    plot(ss_dep[[i]],ss$perclet,ylab="perclet",xlab=i,main=paste("Scatterplot of perclet and",i, sep=" "))
+}
 
+for (i in groupnames) {
+    plot(ss_dep[[i]],ss$perclet,ylab="percbody",xlab=i,main=paste("Scatterplot of percbody and",i, sep=" "))
+}
+```
+
+```{r}
+# EDA for (pre-post)/max values
+
+# libraries
+library(tidyverse)
+library(gridExtra)
+library(corrplot)
+
+# load data
+ss_all <- readRDS("Data/ss_all.RDS") %>%
+  mutate(viewcat = as.factor(viewcat))
+
+# ggpplot options
+theme_set(theme_bw())
+```
+
+```{r}
+# viewcat boxplots
+v1 <- ggplot(ss_all, aes(viewcat, percnumb_max)) +
+  geom_boxplot() +
+  ylim(-75, 75) +
+  xlab("Viewing Category") +
+  ylab("Percent Change in Number Score")
+v2 <- ggplot(ss_all, aes(viewcat, perclet_max)) +
+  geom_boxplot() +
+  ylim(-75, 75)+
+  xlab("Viewing Category") +
+  ylab("Percent Change in Letter Score")
+v3 <- ggplot(ss_all, aes(viewcat, percbody_max)) +
+  geom_boxplot() +
+  ylim(-75, 75)+
+  xlab("Viewing Category") +
+  ylab("Percent Change in Body Score")
+
+png("viewcat_boxplot.png", width = 1280, height = 720)
+gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
+dev.off()
+v1
+v2
+v3
+```
+
+```{r}
+# correlation plots
+ss_all_modified <- ss_all %>%
+  select(percnumb_max, perclet_max, percbody_max, age, peabody)
+ss_all_modified <- cor(ss_all_modified, use="pairwise.complete.obs")
+corrplot(ss_all_modified, method = "number")
+```
+
+```{r}
+# percent change boxplots
+
+# Convert the data from wide to long so we can put it one plot
+ss_all %>%
+  select(id, percnumb_max, perclet_max, percbody_max) %>%
+  pivot_longer(-id) %>%
+  ggplot(aes(x = name, y = value)) +
+  geom_boxplot() +
+  labs(y = "Percent Change", x = "",
+       title = "Child Percent Change in Pre-Post Scores")
+```
+
+```{r}
+ss_all_dep <- ss_all %>%
+  select(age, peabody, site)
+
+groupnames <- colnames(ss_all_dep)
+
+for (i in groupnames) {
+    plot(ss_all_dep[[i]],ss_all$percnumb_max,ylab="percnum_max",xlab=i,main=paste("Scatterplot of percnum_max and",i, sep=" "))
+}
+
+for (i in groupnames) {
+    plot(ss_all_dep[[i]],ss_all$perclet_max,ylab="perclet_max",xlab=i,main=paste("Scatterplot of perclet_max and",i, sep=" "))
+}
+
+for (i in groupnames) {
+    plot(ss_all_dep[[i]],ss_all$perclet_max,ylab="percbody_max",xlab=i,main=paste("Scatterplot of percbody_max and",i, sep=" "))
+}
+```
