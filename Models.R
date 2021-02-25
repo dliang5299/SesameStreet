@@ -39,8 +39,19 @@ fit.init.perclet.max_2 <- glm(perclet_max~(site+sex+age+viewcat+setting+peabody+
 fit.final.perclet.max_2 <- step(fit.init.perclet.max_2, direction='both')
 summary(fit.final.perclet.max_2)
 
+# Considering only up to three-way interactions
+
+# Max
+fit.init.perclet.max_2 <- glm(perclet_max~(site+sex+age+viewcat+setting+peabody+encour)^3, data=ss_all)
+fit.final.perclet.max_2 <- step(fit.init.perclet.max_2, direction='both')
+summary(fit.final.perclet.max_2)
+# Lower AIC, but not enough to justify the complicated model
+
 # Plots look good
-# plot(fit.final.perclet.max)
+plot(fit.final.perclet.max)
+
+
+
 
 
 
