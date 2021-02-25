@@ -252,17 +252,17 @@ data.table 1.13.6 using 2 threads (see ?getDTthreads).  Latest news: r-datatable
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
 <pre class="r"><code>library(tidyverse)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmVnaXN0ZXJlZCBTMyBtZXRob2RzIG92ZXJ3cml0dGVuIGJ5ICdkYnBseXInOlxuICBtZXRob2QgICAgICAgICBmcm9tXG4gIHByaW50LnRibF9sYXp5ICAgICBcbiAgcHJpbnQudGJsX3NxbCAgICAgIFxuLS0gQXR0YWNoaW5nIHBhY2thZ2VzIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSB0aWR5dmVyc2UgMS4zLjAgLS1cbnYgZ2dwbG90MiAzLjMuMyAgICAgdiBwdXJyciAgIDAuMy40XG52IHRpYmJsZSAgMy4wLjUgICAgIHYgZHBseXIgICAxLjAuM1xudiB0aWR5ciAgIDEuMS4yICAgICB2IHN0cmluZ3IgMS40LjBcbnYgcmVhZHIgICAxLjQuMCAgICAgdiBmb3JjYXRzIDAuNS4wXG4tLSBDb25mbGljdHMgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIHRpZHl2ZXJzZV9jb25mbGljdHMoKSAtLVxueCBkcGx5cjo6YmV0d2VlbigpICAgbWFza3MgZGF0YS50YWJsZTo6YmV0d2VlbigpXG54IGRwbHlyOjpmaWx0ZXIoKSAgICBtYXNrcyBzdGF0czo6ZmlsdGVyKClcbnggZHBseXI6OmZpcnN0KCkgICAgIG1hc2tzIGRhdGEudGFibGU6OmZpcnN0KClcbnggZHBseXI6OmxhZygpICAgICAgIG1hc2tzIHN0YXRzOjpsYWcoKVxueCBkcGx5cjo6bGFzdCgpICAgICAgbWFza3MgZGF0YS50YWJsZTo6bGFzdCgpXG54IHB1cnJyOjp0cmFuc3Bvc2UoKSBtYXNrcyBkYXRhLnRhYmxlOjp0cmFuc3Bvc2UoKVxuIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiUmVnaXN0ZXJlZCBTMyBtZXRob2RzIG92ZXJ3cml0dGVuIGJ5ICdkYnBseXInOlxuICBtZXRob2QgICAgICAgICBmcm9tXG4gIHByaW50LnRibF9sYXp5ICAgICBcbiAgcHJpbnQudGJsX3NxbCAgICAgIFxuLS0gQXR0YWNoaW5nIHBhY2thZ2VzIC0tLS0tLS0tLS0tLS0tLS0tIHRpZHl2ZXJzZSAxLjMuMCAtLVxudiBnZ3Bsb3QyIDMuMy4zICAgICB2IHB1cnJyICAgMC4zLjRcbnYgdGliYmxlICAzLjAuNSAgICAgdiBkcGx5ciAgIDEuMC4zXG52IHRpZHlyICAgMS4xLjIgICAgIHYgc3RyaW5nciAxLjQuMFxudiByZWFkciAgIDEuNC4wICAgICB2IGZvcmNhdHMgMC41LjBcbi0tIENvbmZsaWN0cyAtLS0tLS0tLS0tLS0tLS0tLS0tLSB0aWR5dmVyc2VfY29uZmxpY3RzKCkgLS1cbnggZHBseXI6OmJldHdlZW4oKSAgIG1hc2tzIGRhdGEudGFibGU6OmJldHdlZW4oKVxueCBkcGx5cjo6ZmlsdGVyKCkgICAgbWFza3Mgc3RhdHM6OmZpbHRlcigpXG54IGRwbHlyOjpmaXJzdCgpICAgICBtYXNrcyBkYXRhLnRhYmxlOjpmaXJzdCgpXG54IGRwbHlyOjpsYWcoKSAgICAgICBtYXNrcyBzdGF0czo6bGFnKClcbnggZHBseXI6Omxhc3QoKSAgICAgIG1hc2tzIGRhdGEudGFibGU6Omxhc3QoKVxueCBwdXJycjo6dHJhbnNwb3NlKCkgbWFza3MgZGF0YS50YWJsZTo6dHJhbnNwb3NlKClcbiJ9 -->
 <pre><code>Registered S3 methods overwritten by &#39;dbplyr&#39;:
   method         from
   print.tbl_lazy     
   print.tbl_sql      
--- Attaching packages --------------------------- tidyverse 1.3.0 --
+-- Attaching packages ----------------- tidyverse 1.3.0 --
 v ggplot2 3.3.3     v purrr   0.3.4
 v tibble  3.0.5     v dplyr   1.0.3
 v tidyr   1.1.2     v stringr 1.4.0
 v readr   1.4.0     v forcats 0.5.0
--- Conflicts ------------------------------ tidyverse_conflicts() --
+-- Conflicts -------------------- tidyverse_conflicts() --
 x dplyr::between()   masks data.table::between()
 x dplyr::filter()    masks stats::filter()
 x dplyr::first()     masks data.table::first()
