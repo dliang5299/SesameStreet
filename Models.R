@@ -146,7 +146,7 @@ c(fit.final.percnumb.max_2$aic, fit.final.percnumb.max_3$aic)
 
 # Check assumptions for percnumb_max with two-way interaction
 
-# Plots look good
+# Plots look good enough
 plot(fit.final.percnumb.max_2)
 
 percnumb_model <- lm(percnumb_max~site + sex + age + viewcat + setting + 
@@ -250,15 +250,6 @@ abline(0, 0)
 
 # check VIFs; one VIF value of over 10; proceed with caution
 car::vif(percbody_model)
-
-####################################################################################
-
-# Model comparisons 
-# Did not consider age and peabody since there are so many values for each
-
-# Significant differences
-aov_percbody <- aov(fit.final.percbody.max_2)
-plot(TukeyHSD(x=aov_percbody, "viewcat", conf.level = 0.95))
 
 ####################################################################################
 
