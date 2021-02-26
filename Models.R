@@ -180,8 +180,93 @@ plot(TukeyHSD(x=aov_percnumb, "viewcat", conf.level = 0.95))
 plot(TukeyHSD(x=aov_percnumb, "site", conf.level = 0.95))
 
 # No significant differences
-plot(TukeyHSD(x=aov_perclet, "sex", conf.level = 0.95))
-plot(TukeyHSD(x=aov_perclet, "setting", conf.level = 0.95))
+plot(TukeyHSD(x=aov_percnumb, "sex", conf.level = 0.95))
+plot(TukeyHSD(x=aov_percnumb, "setting", conf.level = 0.95))
 
 ####################################################################################
 ####################################################################################
+
+# PERCBODY
+
+# Fitting the model for original response variable perclet
+fit.init.percbody <- glm(percbody~(sex*age*viewcat*setting*peabody*encour)^6, data=ss_all)
+fit.final.percbody = step(fit.init.percbody, direction='backward')
+
+# Fitting the model for new response variable perclet_max
+fit.init.percbody.max <- glm(percbody_max~(sex*age*viewcat*setting*peabody*encour)^6, data=ss_all)
+fit.final.percbody.max = step(fit.init.percbody.max, direction='backward')
+
+# Comparing the two models
+c(fit.final.percbody$aic, fit.final.percbody.max$aic)
+
+####################################################################################
+
+# Considering only two-way interactions
+
+# Fitting the model for original response variable perclet
+fit.init.percbody_2 <- glm(percbody~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
+fit.final.percbody_2 <- step(fit.init.percbody_2, direction='both')
+summary(fit.final.percbody_2)
+plot(fit.final.percbody_2)
+
+# Max
+fit.init.percbody.max_2 <- glm(percbody_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
+fit.final.percbody.max_2 <- step(fit.init.percbody.max_2, direction='both')
+summary(fit.final.percbody.max_2)
+
+# Considering only up to three-way interactions
+
+# Max
+fit.init.percbody.max_3 <- glm(percbody_max~(site+sex+age+viewcat+setting+peabody+encour)^3, data=ss_all)
+fit.final.percbody.max_3 <- step(fit.init.percbody.max_3, direction='both')
+summary(fit.final.percbody.max_3)
+
+# Slightly lower AIC, but not enough to justify the complicated model
+c(fit.final.percbody.max_2$aic, fit.final.percbody.max_3$aic)
+
+####################################################################################
+
+# Check assumptions for percnumb_max with two-way interaction
+
+# Plots look slightly worse; check normality with Anderson-Darling to confirm the data are approximately normal
+plot(fit.final.percbody.max_2)
+
+percbody_model <- lm(percbody_max~site + age + viewcat + setting + 
+                       peabody + age:setting + setting:peabody, data=ss_all)
+
+# We may assume the data are approximately normal
+ad.test(resid(percbody_model))
+
+# Histogram looks good
+hist_percbody_model <- qplot(resid(percbody_model),
+                             geom = "histogram",
+                             bins = 10) + labs(title = "Histogram of residuals",
+                                               x = "residual")
+hist_percbody_model
+
+# Residuals vs. order plot looks good
+plot(ss_all$id, resid(percbody_model), ylab="Residuals", xlab="id", main="Residuals vs order")
+abline(0, 0)
+
+# check VIFs; one VIF value of over 10; proceed with caution
+car::vif(percbody_model)
+
+####################################################################################
+
+# Model comparisons 
+# Did not consider age and peabody since there are so many values for each
+
+# Significant differences
+aov_percbody <- aov(fit.final.percbody.max_2)
+plot(TukeyHSD(x=aov_percbody, "viewcat", conf.level = 0.95))
+####################################################################################
+
+# Model comparisons 
+# Did not consider age and peabody since there are so many values for each
+
+aov_percbody <- aov(fit.final.percbody.max_2)
+
+# No significant differences
+plot(TukeyHSD(x=aov_percbody, "viewcat", conf.level = 0.95))
+plot(TukeyHSD(x=aov_percbody, "site", conf.level = 0.95))
+plot(TukeyHSD(x=aov_percbody, "setting", conf.level = 0.95))
