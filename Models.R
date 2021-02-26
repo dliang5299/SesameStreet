@@ -4,10 +4,16 @@ library(gridExtra)
 library(corrplot)
 library(nortest)
 library(car)
+library(VIF)
 
 # Loading data
 ss_all <- readRDS("Data/ss_all.RDS") %>%
   mutate(viewcat = as.factor(viewcat),
+         sex = as.factor(sex),
+         age = as.factor(age),
+         setting = as.factor(setting),
+         peabody = as.factor(peabody),
+         encour = as.factor(encour),
          site = as.factor(site)) 
   
 
@@ -78,13 +84,12 @@ car::vif(perclet_model)
 ####################################################################################
 
 # Model comparisons
-sex = as.factor(fit.final.perclet.max_2$sex)
-setting = as.factor(fit.final.perclet.max_2$setting)
-encour = as.factor(fit.final.perclet.max_2$encour)
-site = as.factor(fit.final.perclet.max_2$site)
-viewcat = as.factor(fit.final.perclet.max_2$viewcat)
 aov_perclet <- aov(fit.final.perclet_2)
-viewcat = as.factor(ss_all$viewcat)
-TukeyHSD(x=aov_perclet, 'ss_all$viewcat', conf.level = 0.95, which="viewcat")
-TukeyHSD(aov_perclet, conf.level = 0.95, which=c("sex","site", "setting", "viewcat", "encour", "site:age", "sex:peabody", "viewcat:setting", "setting:encour", "peabody:encour"))
-plot(TukeyHSD(aov_perclet, conf.level = 0.95, which=c("sex","site")))
+plot(TukeyHSD(x=aov_perclet, "viewcat", conf.level = 0.95))
+plot(TukeyHSD(x=aov_perclet, "site", conf.level = 0.95))
+plot(TukeyHSD(x=aov_perclet, "peabody", conf.level = 0.95))
+plot(TukeyHSD(x=aov_perclet, "encour", conf.level = 0.95))
+
+# No significant differences
+plot(TukeyHSD(x=aov_perclet, "sex", conf.level = 0.95))
+plot(TukeyHSD(x=aov_perclet, "setting", conf.level = 0.95))
