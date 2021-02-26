@@ -259,6 +259,7 @@ car::vif(percbody_model)
 # Significant differences
 aov_percbody <- aov(fit.final.percbody.max_2)
 plot(TukeyHSD(x=aov_percbody, "viewcat", conf.level = 0.95))
+
 ####################################################################################
 
 # Model comparisons 
