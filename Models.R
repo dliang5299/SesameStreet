@@ -10,9 +10,7 @@ library(VIF)
 ss_all <- readRDS("Data/ss_all.RDS") %>%
   mutate(viewcat = as.factor(viewcat),
          sex = as.factor(sex),
-         age = as.factor(age),
          setting = as.factor(setting),
-         peabody = as.factor(peabody),
          encour = as.factor(encour),
          site = as.factor(site)) 
   
@@ -83,13 +81,15 @@ car::vif(perclet_model)
 
 ####################################################################################
 
-# Model comparisons
-aov_perclet <- aov(fit.final.perclet_2)
+# Model comparisons 
+# Did not consider age and peabody since there are so many values for each
+
+# Significant differences
+aov_perclet <- aov(fit.final.perclet.max_2)
 plot(TukeyHSD(x=aov_perclet, "viewcat", conf.level = 0.95))
 plot(TukeyHSD(x=aov_perclet, "site", conf.level = 0.95))
-plot(TukeyHSD(x=aov_perclet, "peabody", conf.level = 0.95))
-plot(TukeyHSD(x=aov_perclet, "encour", conf.level = 0.95))
 
 # No significant differences
 plot(TukeyHSD(x=aov_perclet, "sex", conf.level = 0.95))
 plot(TukeyHSD(x=aov_perclet, "setting", conf.level = 0.95))
+plot(TukeyHSD(x=aov_perclet, "encour", conf.level = 0.95))
