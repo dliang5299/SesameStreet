@@ -4,92 +4,6 @@ output: html_notebook
 ---
 
 ```{r}
-# libraries
-library(tidyverse)
-library(gridExtra)
-library(corrplot)
-
-# load data
-ss <- readRDS("Data/ss.RDS") %>%
-  mutate(viewcat = as.factor(viewcat))
-
-# ggpplot options
-theme_set(theme_bw())
-```
-
-```{r}
-ss1 <-
-  ss %>%
-  na.omit #filter(percnumb < 1000)
-
-# viewcat boxplots
-v1 <- ggplot(ss1, aes(viewcat, percnumb)) +
-  geom_boxplot() +
-  ylim(-100, 600) +
-  xlab("Viewing Category") +
-  ylab("Percent Change in Number Score")
-v2 <- ggplot(ss1, aes(viewcat, perclet)) +
-  geom_boxplot() +
-  ylim(-100, 600)+
-  xlab("Viewing Category") +
-  ylab("Percent Change in Letter Score")
-v3 <- ggplot(ss1, aes(viewcat, percbody)) +
-  geom_boxplot() +
-  ylim(-100, 600)+
-  xlab("Viewing Category") +
-  ylab("Percent Change in Body Score")
-
-png("viewcat_boxplot.png", width = 1280, height = 720)
-gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
-dev.off()
-```
-
-```{r}
-# correlation plots
-ss_modified <- ss %>%
-  select(percnumb, perclet, percbody, age, peabody)
-ss_modified <- cor(ss_modified, use="pairwise.complete.obs")
-corrplot(ss_modified, method = "number")
-```
-
----
-
-# Percent Change Boxplots
-
-```{r}
-
-# Convert the data from wide to long so we can put it one plot
-ss %>%
-  select(id, percnumb, perclet, percbody) %>%
-  pivot_longer(-id) %>%
-  filter(value < 1000) %>%
-  ggplot(aes(x = name, y = value)) +
-  geom_boxplot() +
-  labs(y = "Percent Change", x = "",
-       title = "Child Percent Change in Pre-Post Scores", 
-       subtitle = "Outlier for percnumb (1200%) removed for clarity")
-```
-
-```{r}
-ss_dep <- ss %>%
-  select(age, peabody, site)
-
-groupnames <- colnames(ss_all_dep)
-
-for (i in groupnames) {
-    plot(ss_dep[[i]],ss$percnumb,ylab="percnum",xlab=i,main=paste("Scatterplot of percnum and",i, sep=" "))
-}
-
-for (i in groupnames) {
-    plot(ss_dep[[i]],ss$perclet,ylab="perclet",xlab=i,main=paste("Scatterplot of perclet and",i, sep=" "))
-}
-
-for (i in groupnames) {
-    plot(ss_dep[[i]],ss$perclet,ylab="percbody",xlab=i,main=paste("Scatterplot of percbody and",i, sep=" "))
-}
-```
-
-```{r}
 # EDA for (pre-post)/max values
 
 # libraries
@@ -111,17 +25,17 @@ v1 <- ggplot(ss_all, aes(viewcat, percnumb_max)) +
   geom_boxplot() +
   ylim(-75, 75) +
   xlab("Viewing Category") +
-  ylab("Percent Change in Number Score")
+  ylab("Change in Number Score Percentage")
 v2 <- ggplot(ss_all, aes(viewcat, perclet_max)) +
   geom_boxplot() +
   ylim(-75, 75)+
   xlab("Viewing Category") +
-  ylab("Percent Change in Letter Score")
+  ylab("Change in Letter Score Percentage")
 v3 <- ggplot(ss_all, aes(viewcat, percbody_max)) +
   geom_boxplot() +
   ylim(-75, 75)+
   xlab("Viewing Category") +
-  ylab("Percent Change in Body Score")
+  ylab("Change in Body Score Percentage")
 
 png("viewcat_boxplot.png", width = 1280, height = 720)
 gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
@@ -151,6 +65,7 @@ ss_all %>%
   labs(y = "Percent Change", x = "",
        title = "Child Percent Change in Pre-Post Scores")
 ```
+
 
 ```{r}
 ss_all_dep <- ss_all %>%
