@@ -27,8 +27,9 @@ theme_set(theme_bw())
 
 ```{r}
 # Not show how to make this table
-
-summary(ss_all)
+ss_all %>%
+  select(-c(regular, percnumb, perclet, percbody)) %>%
+  summary()
 ```
 
 
