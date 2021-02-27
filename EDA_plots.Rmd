@@ -12,14 +12,27 @@ library(gridExtra)
 library(corrplot)
 
 # load data
-ss_all <- readRDS("Data/ss_all.RDS") %>%
-  mutate(viewcat = as.factor(viewcat))
+ss_all <- 
+  readRDS("Data/ss_all.RDS") %>%
+  mutate(viewcat = as.factor(viewcat),
+         sex = as.factor(sex),
+         setting = as.factor(setting),
+         encour = as.factor(encour),
+         site = as.factor(site),
+         regular = as.factor(regular)) 
 
 # ggpplot options
 theme_set(theme_bw())
 ```
 
 ```{r}
+# Not show how to make this table
+
+summary(ss_all)
+```
+
+
+```{r eval=F}
 # viewcat boxplots
 v1 <- ggplot(ss_all, aes(viewcat, percnumb_max)) +
   geom_boxplot() +
@@ -45,6 +58,55 @@ v2
 v3
 ```
 
+
+# Boxplots for every categorical variable
+
+```{r}
+# Convert the data from wide to long so we can put it one plot
+ss_cat_long <-
+  ss_all %>%
+  select(id, percnumb_max, perclet_max, percbody_max, 
+         site, viewcat, sex, setting, encour) %>%
+  pivot_longer(cols = c(percnumb_max, perclet_max, percbody_max)) 
+```
+
+```{r}
+ggplot(ss_cat_long, aes(x = site, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Change in Pre-Post Test Score Percentages vs Site")
+
+ggplot(ss_cat_long, aes(x = viewcat, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Change in Pre-Post Test Score Percentages vs Viewcat")
+
+ggplot(ss_cat_long, aes(x = sex, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Child Change in Pre-Post Test Score Percentages vs Sex")
+
+ggplot(ss_cat_long, aes(x = setting, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Child Change in Pre-Post Test Score Percentages vs Setting")
+
+ggplot(ss_cat_long, aes(x = encour, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Child Change in Pre-Post Test Score Percentages vs Encouragement")
+```
+
+
+---
+
+# Correlation Plot
+
 ```{r}
 # correlation plots
 ss_all_modified <- ss_all %>%
@@ -53,22 +115,64 @@ ss_all_modified <- cor(ss_all_modified, use="pairwise.complete.obs")
 corrplot(ss_all_modified, method = "number")
 ```
 
-```{r}
-# percent change boxplots
 
-# Convert the data from wide to long so we can put it one plot
+---
+
+# Test Score Distributions
+
+```{r}
+# factor levels set to make sure boxplot is in the desired order
+ss_all %>%
+  select(id, prenumb, postnumb, prelet, postlet, prebody, postbody) %>%
+  pivot_longer(-id) %>%
+  mutate(name = factor(name, levels = c("prebody", "postbody", "prelet", "postlet",
+                                        "prenumb", "postnumb"))) %>%
+  ggplot(aes(x = name, y = value)) +
+  geom_boxplot() +
+  labs(y = "Test Score (Percentage of Max)", x = "Test Type",
+       title = "Distribution of test scores for all pre/post tests")
+```
+
+
+```{r}
+# Distributions of test score changes, split by category
 ss_all %>%
   select(id, percnumb_max, perclet_max, percbody_max) %>%
   pivot_longer(-id) %>%
   ggplot(aes(x = name, y = value)) +
   geom_boxplot() +
-  labs(y = "Percent Change", x = "",
-       title = "Child Percent Change in Pre-Post Scores")
+  labs(y = "Change in Test Percentage", x = "",
+       title = "Child Change in Pre-Post Test Score Percentages")
+```
+
+```{r}
+# Scatterplot of test score vs age, separated by test type
+ss_all %>%
+  select(id, percnumb_max, perclet_max, percbody_max, age, peabody) %>%
+  pivot_longer(cols = c(percnumb_max, perclet_max, percbody_max)) %>%
+  ggplot(aes(x = age, y = value)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage", x = "Age",
+       title = "Child Change in Pre-Post Test Score Percentages vs Age")
+```
+
+```{r}
+# Scatterplot of test score vs peabody, separated by test type
+ss_all %>%
+  select(id, percnumb_max, perclet_max, percbody_max, age, peabody) %>%
+  pivot_longer(cols = c(percnumb_max, perclet_max, percbody_max)) %>%
+  ggplot(aes(x = peabody, y = value)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage", x = "Peabody",
+       title = "Child Change in Pre-Post Test Score Percentages vs Peabody")
 ```
 
 
-```{r}
-ss_all_dep <- ss_all %>%
+```{r eval=F}
+ss_all_dep <- 
+  ss_all %>%
   select(age, peabody, site)
 
 groupnames <- colnames(ss_all_dep)
