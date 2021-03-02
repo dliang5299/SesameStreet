@@ -1,6 +1,10 @@
 ---
 title: "Exploratory Data Analysis"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
 ---
 
 ```{r}
@@ -10,6 +14,8 @@ output: html_notebook
 library(tidyverse)
 library(gridExtra)
 library(corrplot)
+library(knitr)
+library(summarytools)
 
 # load data
 ss_all <- 
@@ -26,12 +32,21 @@ theme_set(theme_bw())
 ```
 
 ```{r}
-# Not show how to make this table
-ss_all %>%
-  select(-c(regular, percnumb, perclet, percbody)) %>%
-  summary()
-```
+# cont. summary table
+summary_num <-
+  ss_all %>%
+  select(-percbody, -perclet, -percnumb, -id) %>%
+  descr(stats = c("mean", "sd", "min", "med", "max")) %>%
+  tb()
+kable(summary_num)
 
+# cat. summary tables
+freq(ss_all$site, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+freq(ss_all$sex, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+freq(ss_all$viewcat, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+freq(ss_all$setting, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+freq(ss_all$encour, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+```
 
 ```{r eval=F}
 # viewcat boxplots
