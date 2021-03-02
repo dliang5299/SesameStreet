@@ -15,19 +15,9 @@ ss_all <- readRDS("Data/ss_all.RDS") %>%
          site = as.factor(site)) 
   
 # Max
-fit.init.perclet.max_2 <- glm(perclet_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
+fit.init.perclet.max_2 <- lm(perclet_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
 fit.final.perclet.max_2 <- step(fit.init.perclet.max_2, direction='both')
 summary(fit.final.perclet.max_2)
-
-# Considering only up to three-way interactions
-
-# Max
-fit.init.perclet.max_3 <- glm(perclet_max~(site+sex+age+viewcat+setting+peabody+encour)^3, data=ss_all)
-fit.final.perclet.max_3 <- step(fit.init.perclet.max_3, direction='both')
-summary(fit.final.perclet.max_3)
-
-# Three-way model has lower AIC, but not enough to justify the complicated model
-c(fit.final.perclet.max_2$aic, fit.final.perclet.max_3$aic)
 
 # save model
 saveRDS(fit.final.perclet.max_2, file = 'lettermod.rds')
@@ -74,19 +64,9 @@ plot(TukeyHSD(x=aov_perclet, "site", conf.level = 0.95))
 # Considering only two-way interactions
 
 # Max
-fit.init.percnumb.max_2 <- glm(percnumb_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
+fit.init.percnumb.max_2 <- lm(percnumb_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
 fit.final.percnumb.max_2 <- step(fit.init.percnumb.max_2, direction='both')
 summary(fit.final.percnumb.max_2)
-
-# Considering only up to three-way interactions
-
-# Max
-fit.init.percnumb.max_3 <- glm(perclet_max~(site+sex+age+viewcat+setting+peabody+encour)^3, data=ss_all)
-fit.final.percnumb.max_3 <- step(fit.init.perclet.max_3, direction='both')
-summary(fit.final.percnumb.max_3)
-
-# Lower AIC, but not enough to justify the complicated model
-c(fit.final.percnumb.max_2$aic, fit.final.percnumb.max_3$aic)
 
 # save model
 saveRDS(fit.final.percnumb.max_2, file = 'numbmod.rds')
@@ -134,19 +114,9 @@ plot(TukeyHSD(x=aov_percnumb, "site", conf.level = 0.95))
 
 # Considering only two-way interactions
 
-fit.init.percbody.max_2 <- glm(percbody_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
+fit.init.percbody.max_2 <- lm(percbody_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
 fit.final.percbody.max_2 <- step(fit.init.percbody.max_2, direction='both')
 summary(fit.final.percbody.max_2)
-
-# Considering only up to three-way interactions
-
-# Max
-fit.init.percbody.max_3 <- glm(percbody_max~(site+sex+age+viewcat+setting+peabody+encour)^3, data=ss_all)
-fit.final.percbody.max_3 <- step(fit.init.percbody.max_3, direction='both')
-summary(fit.final.percbody.max_3)
-
-# Slightly lower AIC, but not enough to justify the complicated model
-c(fit.final.percbody.max_2$aic, fit.final.percbody.max_3$aic)
 
 # save model
 saveRDS(fit.final.percbody.max_2, file = 'bodymod.rds')

@@ -1,5 +1,5 @@
 ---
-title: "regression_tables"
+title: "anova_tables"
 output:
   pdf_document: default
   word_document: default
@@ -8,7 +8,8 @@ output:
 ```{r include = F}
 # libraries
 library(tidyverse)
-library(jtools)
+library(knitr)
+library(car)
 
 # load models
 let_mod <- readRDS('lettermod.rds')
@@ -18,19 +19,22 @@ body_mod <- readRDS('bodymod.rds')
 
 ```{r echo = F}
 # letter table
-summ(let_mod, confint = T)
+let_aov <- Anova(let_mod)
+kable(let_aov)
 ```
 
 \newpage
 
 ```{r echo = F}
 # number table
-summ(numb_mod, confint = T)
+numb_aov <- Anova(numb_mod)
+kable(numb_aov)
 ```
 
 \newpage
 
 ```{r echo = F}
 # body table
-summ(body_mod, confint = T)
+body_aov <- Anova(body_mod)
+kable(body_aov)
 ```
