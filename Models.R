@@ -29,11 +29,15 @@ summary(fit.final.perclet.max_3)
 # Three-way model has lower AIC, but not enough to justify the complicated model
 c(fit.final.perclet.max_2$aic, fit.final.perclet.max_3$aic)
 
+# save model
+saveRDS(fit.final.perclet.max_2, file = 'lettermod.rds')
+
 ####################################################################################
 
 # Check assumptions for perclet_max with two-way interaction
 
 # Plots look good
+par(mfrow = c(2, 2))
 plot(fit.final.perclet.max_2)
 
 # We may assume the data are approximately normal
@@ -47,6 +51,7 @@ hist_perclet_model <- qplot(resid(fit.final.perclet.max_2),
 hist_perclet_model
 
 # Residuals vs. order plot looks good
+par(mfrow = c(1, 1))
 plot(ss_all$id, resid(fit.final.perclet.max_2), ylab="Residuals", xlab="id", main="Residuals vs order")
 abline(0, 0)
 
@@ -83,11 +88,15 @@ summary(fit.final.percnumb.max_3)
 # Lower AIC, but not enough to justify the complicated model
 c(fit.final.percnumb.max_2$aic, fit.final.percnumb.max_3$aic)
 
+# save model
+saveRDS(fit.final.percnumb.max_2, file = 'numbmod.rds')
+
 ####################################################################################
 
 # Check assumptions for percnumb_max with two-way interaction
 
 # Plots look good enough
+par(mfrow = c(2, 2))
 plot(fit.final.percnumb.max_2)
 
 # We may assume the data are approximately normal
@@ -101,6 +110,7 @@ hist_percnumb_model <- qplot(resid(fit.final.percnumb.max_2),
 hist_percnumb_model
 
 # Residuals vs. order plot looks good
+par(mfrow = c(1, 1))
 plot(ss_all$id, resid(fit.final.percnumb.max_2), ylab="Residuals", xlab="id", main="Residuals vs order")
 abline(0, 0)
 
@@ -138,11 +148,16 @@ summary(fit.final.percbody.max_3)
 # Slightly lower AIC, but not enough to justify the complicated model
 c(fit.final.percbody.max_2$aic, fit.final.percbody.max_3$aic)
 
+# save model
+saveRDS(fit.final.percbody.max_2, file = 'bodymod.rds')
+
 ####################################################################################
 
-# Check assumptions for percnumb_max with two-way interaction
+# Check assumptions for percbody_max with two-way interaction
 
-# Plots look slightly worse; check normality with Anderson-Darling to confirm the data are approximately normal
+# Plots look slightly worse; check normality with Anderson-Darling to confirm the 
+# data are approximately normal
+par(mfrow = c(2, 2))
 plot(fit.final.percbody.max_2)
 
 # We may assume the data are approximately normal
@@ -156,6 +171,7 @@ hist_percbody_model <- qplot(resid(fit.final.percbody.max_2),
 hist_percbody_model
 
 # Residuals vs. order plot looks good
+par(mfrow = c(1, 1))
 plot(ss_all$id, resid(fit.final.percbody.max_2), ylab="Residuals", xlab="id", main="Residuals vs order")
 abline(0, 0)
 

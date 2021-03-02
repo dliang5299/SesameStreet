@@ -1,0 +1,36 @@
+---
+title: "regression_tables"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r include = F}
+# libraries
+library(tidyverse)
+library(jtools)
+
+# load models
+let_mod <- readRDS('lettermod.rds')
+numb_mod <- readRDS('numbmod.rds')
+body_mod <- readRDS('bodymod.rds')
+```
+
+```{r echo = F}
+# letter table
+summ(let_mod, confint = T)
+```
+
+\newpage
+
+```{r echo = F}
+# number table
+summ(numb_mod, confint = T)
+```
+
+\newpage
+
+```{r echo = F}
+# body table
+summ(body_mod, confint = T)
+```
