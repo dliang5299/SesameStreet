@@ -36,26 +36,22 @@ c(fit.final.perclet.max_2$aic, fit.final.perclet.max_3$aic)
 # Plots look good
 plot(fit.final.perclet.max_2)
 
-perclet_model <- lm(perclet_max~site + sex + age + viewcat + setting + peabody + 
-                   encour + site:age + sex:peabody + age:viewcat + age:peabody + 
-                   viewcat:setting + setting:encour + peabody:encour, data=ss_all)
-
 # We may assume the data are approximately normal
-ad.test(resid(perclet_model))
+ad.test(resid(fit.final.perclet.max_2))
 
 # Histogram looks good
-hist_perclet_model <- qplot(resid(perclet_model),
+hist_perclet_model <- qplot(resid(fit.final.perclet.max_2),
             geom = "histogram",
             bins = 10) + labs(title = "Histogram of residuals",
        x = "residual")
 hist_perclet_model
 
 # Residuals vs. order plot looks good
-plot(ss_all$id, resid(perclet_model), ylab="Residuals", xlab="id", main="Residuals vs order")
+plot(ss_all$id, resid(fit.final.perclet.max_2), ylab="Residuals", xlab="id", main="Residuals vs order")
 abline(0, 0)
 
 # check VIFs; some predictors have VIF value of over 10; proceed with caution
-car::vif(perclet_model)
+car::vif(fit.final.perclet.max_2)
 
 ####################################################################################
 
@@ -67,36 +63,10 @@ aov_perclet <- aov(fit.final.perclet.max_2)
 plot(TukeyHSD(x=aov_perclet, "viewcat", conf.level = 0.95))
 plot(TukeyHSD(x=aov_perclet, "site", conf.level = 0.95))
 
-# No significant differences
-plot(TukeyHSD(x=aov_perclet, "sex", conf.level = 0.95))
-plot(TukeyHSD(x=aov_perclet, "setting", conf.level = 0.95))
-plot(TukeyHSD(x=aov_perclet, "encour", conf.level = 0.95))
-
 ####################################################################################
-####################################################################################
-
-# PERCNUMB
-
-# Fitting the model for original response variable perclet
-fit.init.percnumb <- glm(percnumb~(sex*age*viewcat*setting*peabody*encour)^6, data=ss_all)
-fit.final.percnumb = step(fit.init.percnumb, direction='backward')
-
-# Fitting the model for new response variable perclet_max
-fit.init.percnumb.max <- glm(percnumb_max~(sex*age*viewcat*setting*peabody*encour)^6, data=ss_all)
-fit.final.percnumb.max = step(fit.init.percnumb.max, direction='backward')
-
-# Comparing the two models
-c(fit.final.percnumb$aic, fit.final.percnumb.max$aic)
-
 ####################################################################################
 
 # Considering only two-way interactions
-
-# Fitting the model for original response variable perclet
-fit.init.percnumb_2 <- glm(percnumb~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
-fit.final.percnumb_2 <- step(fit.init.percnumb_2, direction='both')
-summary(fit.final.percnumb_2)
-plot(fit.final.percnumb_2)
 
 # Max
 fit.init.percnumb.max_2 <- glm(percnumb_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
@@ -120,25 +90,22 @@ c(fit.final.percnumb.max_2$aic, fit.final.percnumb.max_3$aic)
 # Plots look good enough
 plot(fit.final.percnumb.max_2)
 
-percnumb_model <- lm(percnumb_max~site + sex + age + viewcat + setting + 
-                       peabody + site:peabody + sex:viewcat + age:setting + setting:peabody, data=ss_all)
-
 # We may assume the data are approximately normal
-ad.test(resid(percnumb_model))
+ad.test(resid(fit.final.percnumb.max_2))
 
 # Histogram looks good
-hist_percnumb_model <- qplot(resid(percnumb_model),
+hist_percnumb_model <- qplot(resid(fit.final.percnumb.max_2),
                             geom = "histogram",
                             bins = 10) + labs(title = "Histogram of residuals",
                                               x = "residual")
 hist_percnumb_model
 
 # Residuals vs. order plot looks good
-plot(ss_all$id, resid(percnumb_model), ylab="Residuals", xlab="id", main="Residuals vs order")
+plot(ss_all$id, resid(fit.final.percnumb.max_2), ylab="Residuals", xlab="id", main="Residuals vs order")
 abline(0, 0)
 
 # check VIFs; one VIF value of over 10; proceed with caution
-car::vif(percnumb_model)
+car::vif(fit.final.percnumb.max_2)
 
 ####################################################################################
 
@@ -150,37 +117,13 @@ aov_percnumb <- aov(fit.final.percnumb.max_2)
 plot(TukeyHSD(x=aov_percnumb, "viewcat", conf.level = 0.95))
 plot(TukeyHSD(x=aov_percnumb, "site", conf.level = 0.95))
 
-# No significant differences
-plot(TukeyHSD(x=aov_percnumb, "sex", conf.level = 0.95))
-plot(TukeyHSD(x=aov_percnumb, "setting", conf.level = 0.95))
-
 ####################################################################################
 ####################################################################################
 
 # PERCBODY
 
-# Fitting the model for original response variable perclet
-fit.init.percbody <- glm(percbody~(sex*age*viewcat*setting*peabody*encour)^6, data=ss_all)
-fit.final.percbody = step(fit.init.percbody, direction='backward')
-
-# Fitting the model for new response variable perclet_max
-fit.init.percbody.max <- glm(percbody_max~(sex*age*viewcat*setting*peabody*encour)^6, data=ss_all)
-fit.final.percbody.max = step(fit.init.percbody.max, direction='backward')
-
-# Comparing the two models
-c(fit.final.percbody$aic, fit.final.percbody.max$aic)
-
-####################################################################################
-
 # Considering only two-way interactions
 
-# Fitting the model for original response variable perclet
-fit.init.percbody_2 <- glm(percbody~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
-fit.final.percbody_2 <- step(fit.init.percbody_2, direction='both')
-summary(fit.final.percbody_2)
-plot(fit.final.percbody_2)
-
-# Max
 fit.init.percbody.max_2 <- glm(percbody_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
 fit.final.percbody.max_2 <- step(fit.init.percbody.max_2, direction='both')
 summary(fit.final.percbody.max_2)
@@ -202,25 +145,22 @@ c(fit.final.percbody.max_2$aic, fit.final.percbody.max_3$aic)
 # Plots look slightly worse; check normality with Anderson-Darling to confirm the data are approximately normal
 plot(fit.final.percbody.max_2)
 
-percbody_model <- lm(percbody_max~site + age + viewcat + setting + 
-                       peabody + age:setting + setting:peabody, data=ss_all)
-
 # We may assume the data are approximately normal
-ad.test(resid(percbody_model))
+ad.test(resid(fit.final.percbody.max_2))
 
 # Histogram looks good
-hist_percbody_model <- qplot(resid(percbody_model),
+hist_percbody_model <- qplot(resid(fit.final.percbody.max_2),
                              geom = "histogram",
                              bins = 10) + labs(title = "Histogram of residuals",
                                                x = "residual")
 hist_percbody_model
 
 # Residuals vs. order plot looks good
-plot(ss_all$id, resid(percbody_model), ylab="Residuals", xlab="id", main="Residuals vs order")
+plot(ss_all$id, resid(fit.final.percbody.max_2), ylab="Residuals", xlab="id", main="Residuals vs order")
 abline(0, 0)
 
 # check VIFs; one VIF value of over 10; proceed with caution
-car::vif(percbody_model)
+car::vif(fit.final.percbody.max_2)
 
 ####################################################################################
 
