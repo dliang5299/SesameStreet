@@ -9,7 +9,6 @@ output:
 # libraries
 library(tidyverse)
 library(knitr)
-library(car)
 
 # load models
 let_mod <- readRDS('lettermod.rds')
@@ -19,22 +18,22 @@ body_mod <- readRDS('bodymod.rds')
 
 ```{r echo = F}
 # letter table
-let_aov <- Anova(let_mod)
-kable(let_aov)
+let_aov <- aov(let_mod) %>% summary()
+kable(let_aov[[1]])
 ```
 
 \newpage
 
 ```{r echo = F}
 # number table
-numb_aov <- Anova(numb_mod)
-kable(numb_aov)
+numb_aov <- aov(numb_mod) %>% summary()
+kable(numb_aov[[1]])
 ```
 
 \newpage
 
 ```{r echo = F}
 # body table
-body_aov <- Anova(body_mod)
-kable(body_aov)
+body_aov <- aov(body_mod) %>% summary()
+kable(body_aov[[1]])
 ```
