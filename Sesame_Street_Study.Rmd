@@ -1,0 +1,416 @@
+---
+title: "Sesame Street Study"
+output: html_notebook
+---
+
+## DATA PROCESSING
+
+```{r}
+# Libraries
+library(data.table)
+library(tidyverse)
+
+# Load data
+ss_raw <- fread("Data/SesameStreetData.csv")
+```
+
+```{r}
+# Create response variables
+ss <-
+  ss_raw %>%
+  mutate(percnumb = (postnumb - prenumb)*100/prenumb,
+         perclet = (postlet - prelet)*100/prelet,
+         percbody = (postbody - prebody)*100/prebody) %>%
+  select(id, site, sex, age, viewcat, setting, peabody, encour, regular,
+         prenumb, postnumb, percnumb, 
+         prelet, postlet, perclet, 
+         prebody, postbody, percbody) %>%
+  mutate(percnumb = replace(percnumb, percnumb==1200, NA)) # Set 1200 score to NA
+
+
+```
+
+```{r}
+saveRDS(ss, file = "Data/ss.RDS")
+```
+
+```{r}
+# Create response variables, including the divided by max
+# Keep the outlier for pure percent increase
+ss_all <-
+  ss_raw %>%
+  mutate(percnumb = (postnumb - prenumb)*100/prenumb,
+         perclet = (postlet - prelet)*100/prelet,
+         percbody = (postbody - prebody)*100/prebody) %>%
+  mutate(percnumb_max = (postnumb - prenumb)*100/54,
+         perclet_max = (postlet - prelet)*100/58,
+         percbody_max = (postbody - prebody)*100/32) %>%
+  select(id, site, sex, age, viewcat, setting, 
+         peabody, encour, regular,
+         prenumb, postnumb, percnumb, percnumb_max,
+         prelet, postlet, perclet, perclet_max,
+         prebody, postbody, percbody, percbody_max) 
+```
+
+```{r}
+saveRDS(ss_all, file = "Data/ss_all.RDS")
+```
+
+## EDA PLOTS
+
+```{r}
+# EDA for (pre-post)/max values
+
+# Libraries
+library(tidyverse)
+library(gridExtra)
+library(corrplot)
+library(knitr)
+library(summarytools)
+
+# Load data
+ss_all <- 
+  readRDS("Data/ss_all.RDS") %>%
+  mutate(viewcat = as.factor(viewcat),
+         sex = as.factor(sex),
+         setting = as.factor(setting),
+         encour = as.factor(encour),
+         site = as.factor(site),
+         regular = as.factor(regular)) 
+
+# ggpplot options
+theme_set(theme_bw())
+```
+
+```{r}
+# Cont. summary table
+summary_num <-
+  ss_all %>%
+  select(-percbody, -perclet, -percnumb, -id) %>%
+  descr(stats = c("mean", "sd", "min", "med", "max")) %>%
+  tb()
+kable(summary_num)
+
+# Cat. summary tables
+freq(ss_all$site, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+freq(ss_all$sex, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+freq(ss_all$viewcat, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+freq(ss_all$setting, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+freq(ss_all$encour, cumul = F, report.nas = F, totals = F) %>% tb() %>% kable()
+```
+
+```{r eval=F}
+# Viewcat boxplots
+v1 <- ggplot(ss_all, aes(viewcat, percnumb_max)) +
+  geom_boxplot() +
+  ylim(-75, 75) +
+  xlab("Viewing Category") +
+  ylab("Change in Number Score Percentage")
+v2 <- ggplot(ss_all, aes(viewcat, perclet_max)) +
+  geom_boxplot() +
+  ylim(-75, 75)+
+  xlab("Viewing Category") +
+  ylab("Change in Letter Score Percentage")
+v3 <- ggplot(ss_all, aes(viewcat, percbody_max)) +
+  geom_boxplot() +
+  ylim(-75, 75)+
+  xlab("Viewing Category") +
+  ylab("Change in Body Score Percentage")
+
+png("viewcat_boxplot.png", width = 1280, height = 720)
+gridExtra::grid.arrange(v1, v2, v3, nrow = 1)
+dev.off()
+v1
+v2
+v3
+```
+
+```{r}
+# Boxplots for every categorical variable
+
+# Convert the data from wide to long so we can put it one plot
+ss_cat_long <-
+  ss_all %>%
+  select(id, percnumb_max, perclet_max, percbody_max, 
+         site, viewcat, sex, setting, encour) %>%
+  pivot_longer(cols = c(percnumb_max, perclet_max, percbody_max)) 
+```
+
+```{r}
+ggplot(ss_cat_long, aes(x = site, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Change in Pre-Post Test Score Percentages vs Site")
+
+ggplot(ss_cat_long, aes(x = viewcat, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Change in Pre-Post Test Score Percentages vs Viewcat")
+
+ggplot(ss_cat_long, aes(x = sex, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Child Change in Pre-Post Test Score Percentages vs Sex")
+
+ggplot(ss_cat_long, aes(x = setting, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Child Change in Pre-Post Test Score Percentages vs Setting")
+
+ggplot(ss_cat_long, aes(x = encour, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage",
+       title = "Child Change in Pre-Post Test Score Percentages vs Encouragement")
+```
+
+```{r}
+# Correlation plots
+ss_all_modified <- ss_all %>%
+  select(percnumb_max, perclet_max, percbody_max, age, peabody)
+ss_all_modified <- cor(ss_all_modified, use="pairwise.complete.obs")
+corrplot(ss_all_modified, method = "number")
+```
+
+```{r}
+# Test score distributions
+# Factor levels set to make sure boxplot is in the desired order
+ss_all %>%
+  select(id, prenumb, postnumb, prelet, postlet, prebody, postbody) %>%
+  pivot_longer(-id) %>%
+  mutate(name = factor(name, levels = c("prebody", "postbody", "prelet", "postlet",
+                                        "prenumb", "postnumb"))) %>%
+  ggplot(aes(x = name, y = value)) +
+  geom_boxplot() +
+  labs(y = "Test Score (Percentage of Max)", x = "Test Type",
+       title = "Distribution of test scores for all pre/post tests")
+```
+
+```{r}
+# Distributions of test score changes, split by category
+ss_all %>%
+  select(id, percnumb_max, perclet_max, percbody_max) %>%
+  pivot_longer(-id) %>%
+  ggplot(aes(x = name, y = value)) +
+  geom_boxplot() +
+  labs(y = "Change in Test Percentage", x = "",
+       title = "Child Change in Pre-Post Test Score Percentages")
+```
+
+```{r}
+# Scatterplot of test score vs age, separated by test type
+ss_all %>%
+  select(id, percnumb_max, perclet_max, percbody_max, age, peabody) %>%
+  pivot_longer(cols = c(percnumb_max, perclet_max, percbody_max)) %>%
+  ggplot(aes(x = age, y = value)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage", x = "Age",
+       title = "Child Change in Pre-Post Test Score Percentages vs Age")
+```
+
+```{r}
+# Scatterplot of test score vs peabody, separated by test type
+ss_all %>%
+  select(id, percnumb_max, perclet_max, percbody_max, age, peabody) %>%
+  pivot_longer(cols = c(percnumb_max, perclet_max, percbody_max)) %>%
+  ggplot(aes(x = peabody, y = value)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~name) + 
+  labs(y = "Change in Test Percentage", x = "Peabody",
+       title = "Child Change in Pre-Post Test Score Percentages vs Peabody")
+```
+
+```{r eval=F}
+ss_all_dep <- 
+  ss_all %>%
+  select(age, peabody, site)
+
+groupnames <- colnames(ss_all_dep)
+
+for (i in groupnames) {
+    plot(ss_all_dep[[i]],ss_all$percnumb_max,ylab="percnum_max",xlab=i,main=paste("Scatterplot of percnum_max and",i, sep=" "))
+}
+
+for (i in groupnames) {
+    plot(ss_all_dep[[i]],ss_all$perclet_max,ylab="perclet_max",xlab=i,main=paste("Scatterplot of perclet_max and",i, sep=" "))
+}
+
+for (i in groupnames) {
+    plot(ss_all_dep[[i]],ss_all$perclet_max,ylab="percbody_max",xlab=i,main=paste("Scatterplot of percbody_max and",i, sep=" "))
+}
+```
+
+## MODELING
+
+```{r}
+# Libraries
+library(tidyverse)
+library(gridExtra)
+library(corrplot)
+library(nortest)
+library(car)
+library(VIF)
+```
+
+
+```{r}
+# Loading data
+ss_all <- readRDS("Data/ss_all.RDS") %>%
+  mutate(viewcat = as.factor(viewcat),
+         sex = as.factor(sex),
+         setting = as.factor(setting),
+         encour = as.factor(encour),
+         site = as.factor(site))
+```
+
+### MODELING FOR LETTERS
+
+```{r}
+# Find model using two-way interactions
+fit.init.perclet.max_2 <- lm(perclet_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
+fit.final.perclet.max_2 <- step(fit.init.perclet.max_2, direction='both')
+summary(fit.final.perclet.max_2)
+
+# Save model
+saveRDS(fit.final.perclet.max_2, file = 'lettermod.rds')
+```
+
+```{r}
+# Check assumptions for perclet_max with two-way interaction
+
+# Plots look good
+par(mfrow = c(2, 2))
+plot(fit.final.perclet.max_2)
+
+# We may assume the data are approximately normal
+ad.test(resid(fit.final.perclet.max_2))
+
+# Histogram looks good
+hist_perclet_model <- qplot(resid(fit.final.perclet.max_2),
+            geom = "histogram",
+            bins = 10) + labs(title = "Histogram of residuals",
+       x = "residual")
+hist_perclet_model
+
+# Residuals vs. order plot looks good
+par(mfrow = c(1, 1))
+plot(ss_all$id, resid(fit.final.perclet.max_2), ylab="Residuals", xlab="id", main="Residuals vs order")
+abline(0, 0)
+
+# Check VIFs; some predictors have VIF value of over 10; proceed with caution
+car::vif(fit.final.perclet.max_2)
+```
+
+```{r}
+# Model comparisons 
+# Did not consider age and peabody since there are so many values for each
+
+# Significant differences
+aov_perclet <- aov(fit.final.perclet.max_2)
+plot(TukeyHSD(x=aov_perclet, "viewcat", conf.level = 0.95))
+plot(TukeyHSD(x=aov_perclet, "site", conf.level = 0.95))
+```
+
+### MODELING FOR NUMBERS
+
+```{r}
+# Find model using two-way interactions
+fit.init.percnumb.max_2 <- lm(percnumb_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
+fit.final.percnumb.max_2 <- step(fit.init.percnumb.max_2, direction='both')
+summary(fit.final.percnumb.max_2)
+
+# Save model
+saveRDS(fit.final.percnumb.max_2, file = 'numbmod.rds')
+```
+
+```{r}
+# Check assumptions for percnumb_max with two-way interaction
+
+# Plots look good enough
+par(mfrow = c(2, 2))
+plot(fit.final.percnumb.max_2)
+
+# We may assume the data are approximately normal
+ad.test(resid(fit.final.percnumb.max_2))
+
+# Histogram looks good
+hist_percnumb_model <- qplot(resid(fit.final.percnumb.max_2),
+                            geom = "histogram",
+                            bins = 10) + labs(title = "Histogram of residuals",
+                                              x = "residual")
+hist_percnumb_model
+
+# Residuals vs. order plot looks good
+par(mfrow = c(1, 1))
+plot(ss_all$id, resid(fit.final.percnumb.max_2), ylab="Residuals", xlab="id", main="Residuals vs order")
+abline(0, 0)
+
+# Check VIFs; one VIF value of over 10; proceed with caution
+car::vif(fit.final.percnumb.max_2)
+```
+
+```{r}
+# Model comparisons 
+# Did not consider age and peabody since there are so many values for each
+
+# Significant differences
+aov_percnumb <- aov(fit.final.percnumb.max_2)
+plot(TukeyHSD(x=aov_percnumb, "viewcat", conf.level = 0.95))
+plot(TukeyHSD(x=aov_percnumb, "site", conf.level = 0.95))
+```
+
+### MODELING FOR BODY PARTS
+
+```{r}
+# Find model using two-way interactions
+fit.init.percbody.max_2 <- lm(percbody_max~(site+sex+age+viewcat+setting+peabody+encour)^2, data=ss_all)
+fit.final.percbody.max_2 <- step(fit.init.percbody.max_2, direction='both')
+summary(fit.final.percbody.max_2)
+
+# Save model
+saveRDS(fit.final.percbody.max_2, file = 'bodymod.rds')
+```
+
+```{r}
+# Check assumptions for percbody_max with two-way interaction
+
+# Plots look slightly worse; check normality with Anderson-Darling to confirm the 
+# data are approximately normal
+par(mfrow = c(2, 2))
+plot(fit.final.percbody.max_2)
+
+# We may assume the data are approximately normal
+ad.test(resid(fit.final.percbody.max_2))
+
+# Histogram looks good
+hist_percbody_model <- qplot(resid(fit.final.percbody.max_2),
+                             geom = "histogram",
+                             bins = 10) + labs(title = "Histogram of residuals",
+                                               x = "residual")
+hist_percbody_model
+
+# Residuals vs. order plot looks good
+par(mfrow = c(1, 1))
+plot(ss_all$id, resid(fit.final.percbody.max_2), ylab="Residuals", xlab="id", main="Residuals vs order")
+abline(0, 0)
+
+# Check VIFs; one VIF value of over 10; proceed with caution
+car::vif(fit.final.percbody.max_2)
+```
+
+```{r}
+# Model comparisons 
+# Did not consider age and peabody since there are so many values for each
+
+aov_percbody <- aov(fit.final.percbody.max_2)
+
+# No significant differences
+plot(TukeyHSD(x=aov_percbody, "viewcat", conf.level = 0.95))
+plot(TukeyHSD(x=aov_percbody, "site", conf.level = 0.95))
+plot(TukeyHSD(x=aov_percbody, "setting", conf.level = 0.95))
+```
