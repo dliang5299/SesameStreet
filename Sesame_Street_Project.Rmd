@@ -1,6 +1,6 @@
 ---
 title: "Sesame Street Project"
-output: word_document
+output: html_notebook
 ---
 
 ## DATA PROCESSING
